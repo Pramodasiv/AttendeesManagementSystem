@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Attendance Management System</title>
+  <!--link rel="stylesheet" href="style.css"-->
+</head>
+<body>
+  <h1>Attendance Management System</h1>
+  <form action="submit_attendance.php" method="post">
+    <label for="employee_id">Employee ID:</label><br>
+    <input type="text" id="employee_id" name="employee_id"><br>
+    <label for="date">Date:</label><br>
+    <input type="date" id="date" name="date"><br>
+    <label for="time_in">Time In:</label><br>
+    <input type="time" id="time_in" name="time_in"><br>
+    <label for="time_out">Time Out:</label><br>
+    <input type="time" id="time_out" name="time_out"><br><br>
+    <input type="submit" value="Submit">
+  </form>
+  <?php
+  if (isset($_POST['employee_id']) && isset($_POST['date']) && isset($_POST['time_in']) && isset($_POST['time_out'])) {
+    $employee_id = $_POST['employee_id'];
+    $date = $_POST['date'];
+    $time_in = $_POST['time_in'];
+    $time_out = $_POST['time_out'];
+    // Connect to the database
+    $conn = new mysqli("localhost", "root", "", "attendance_management_system");
+    // Check if the employee exists
+    $sql = "SELECT * FROM employees WHERE employee_id = '$employee_id'";
+    $result = $conn->query($sql);
+    if ($result->num_rows == 0) {
+      echo "Employee does not exist.";
+    } else {
+      // Insert the attendance record
+      $sql = "INSERT INTO attendance (employee_id, date, time_in, time_out) VALUES ('$employee_id', '$date', '$time_in', '$time_out')";
+      $conn->query($sql);
+      echo "Attendance record inserted successfully.";
+    }
+    // Close the database connection
+    $conn
